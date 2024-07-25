@@ -94,7 +94,7 @@ def main():
     audioname = args.audioname
     
     # Проверка значений
-    if isinstance(origname, str) and isinstance(audioname, str):
+    if not isinstance(origname, str) and not isinstance(audioname, str):
         print("Введите пожалуйста строку")
     elif Path(origname).suffix != '.txt':
         print("Требуется расширение .txt для файов оригинального текста")
