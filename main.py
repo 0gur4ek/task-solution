@@ -8,7 +8,7 @@ from vosk import Model, KaldiRecognizer
 from pydub import AudioSegment
 from pathlib import Path
 
-def DetectMiisssingText(original_file_name, audio_file_name):
+def DetectMissingText(original_file_name, audio_file_name):
     
     # Магические числа формата wav
     FRAME_RATE = 44100
@@ -25,18 +25,17 @@ def DetectMiisssingText(original_file_name, audio_file_name):
     record.SetWords(True)
 
     # Предобработка аудио
-    audioResult = AudioSegment.from_wav(audio_file_name)
-    audioResult = audioResult.set_channels(CHANNELS)
-    audioResult = audioResult.set_frame_rate(FRAME_RATE)
+    audio_result = AudioSegment.from_wav(audio_file_name)
+    audio_result = audio_result.set_channels(CHANNELS)
+    audio_result = audio_result.set_frame_rate(FRAME_RATE)
     
-    record.AcceptWaveform(audioResult.raw_data)
+    record.AcceptWaveform(audio_result.raw_data)
     result      = record.Result()
     json_result = json.loads(result)
 
-
     # Массивы со словами
-    wordbox_orig   = original_text.lower().split(" ")
-    wordbox_audio  = json_result["text"].replace('ё', 'e').split(" ")
+    wordbox_orig  = original_text.lower().split(" ")
+    wordbox_audio = json_result["text"].replace('ё', 'e').split(" ")
 
     # Смотрим задержки по времени между словами
     time_delays_start = [i['start'] for i in json_result['result']]
@@ -95,14 +94,15 @@ def main():
     audioname = args.audioname
     
     # Проверка значений
-    if Path(origname).suffix != '.txt':
+    if isinstance(origname, str) and isinstance(audioname, str):
+        print("Введите пожалуйста строку")
+    elif Path(origname).suffix != '.txt':
         print("Требуется расширение .txt для файов оригинального текста")
     elif Path(audioname).suffix != '.wav':
         print("Требуется расширение .wav для файов аудиодорожки")
     else:
-        DetectMiisssingText(origname, audioname)
+        DetectMissingText(origname, audioname)
     
-
 
 
 
